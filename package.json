@@ -1,6 +1,7 @@
 {
   "name": "sudoku-lan",
   "version": "1.0.0",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node public/assets/js/server.js"

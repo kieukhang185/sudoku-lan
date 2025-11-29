@@ -1,37 +1,6 @@
+import { generateSudoku } from './game.js';
+
 // ===== SOLO SUDOKU (PLAY ALONE) =====
-
-// Simple sample puzzles (0 = empty)
-const soloPuzzles = [
-  {
-    // Easy
-    grid: [
-      [5,3,0, 0,7,0, 0,0,0],
-      [6,0,0, 1,9,5, 0,0,0],
-      [0,9,8, 0,0,0, 0,6,0],
-
-      [8,0,0, 0,6,0, 0,0,3],
-      [4,0,0, 8,0,3, 0,0,1],
-      [7,0,0, 0,2,0, 0,0,6],
-
-      [0,6,0, 0,0,0, 2,8,0],
-      [0,0,0, 4,1,9, 0,0,5],
-      [0,0,0, 0,8,0, 0,7,9]
-    ],
-    solution: [
-      [5,3,4, 6,7,8, 9,1,2],
-      [6,7,2, 1,9,5, 3,4,8],
-      [1,9,8, 3,4,2, 5,6,7],
-
-      [8,5,9, 7,6,1, 4,2,3],
-      [4,2,6, 8,5,3, 7,9,1],
-      [7,1,3, 9,2,4, 8,5,6],
-
-      [9,6,1, 5,3,7, 2,8,4],
-      [2,8,7, 4,1,9, 6,3,5],
-      [3,4,5, 2,8,6, 1,7,9]
-    ]
-  }
-];
 
 let soloCurrentPuzzleIndex = 0;
 let soloGrid = [];
@@ -42,15 +11,10 @@ const soloBoardEl = document.getElementById("board");
 const soloStatusEl = document.getElementById("status");
 const soloScoreEl = document.getElementById("solo-score");
 
-function deepCopyGrid(grid) {
-  return JSON.parse(JSON.stringify(grid));
-}
-
-function chooseRandomSoloPuzzle() {
-  soloCurrentPuzzleIndex = Math.floor(Math.random() * soloPuzzles.length);
-  const p = soloPuzzles[soloCurrentPuzzleIndex];
-  soloGrid = deepCopyGrid(p.grid);
-  soloSolutionGrid = deepCopyGrid(p.solution);
+function newSoloGame(difficulty = "medium") {
+  const { grid, solution } = generateSudoku(difficulty);
+  soloGrid = grid;
+  soloSolutionGrid = solution;
 }
 
 function renderSoloBoard() {
@@ -181,7 +145,7 @@ soloBoardEl.addEventListener("click", (e) => {
 document.getElementById("btn-new").addEventListener("click", () => {
   soloScore = 0;
   updateSoloScore();
-  chooseRandomSoloPuzzle();
+  newSoloGame("medium");  // "easy" | "medium" | "hard"
   renderSoloBoard();
   soloStatusEl.textContent = "New puzzle started.";
   highlightSoloSameNumber(""); // clear
@@ -249,7 +213,7 @@ document.getElementById("btn-clear").addEventListener("click", () => {
 (function initSolo() {
   soloScore = 0;
   updateSoloScore();
-  chooseRandomSoloPuzzle();
+  newSoloGame("medium");  // "easy" | "medium" | "hard"
   renderSoloBoard();
   soloStatusEl.textContent = "Solo mode – fill the board!";
 })();
