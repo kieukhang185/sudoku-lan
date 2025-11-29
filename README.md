@@ -21,10 +21,10 @@ Players connect using:
 ```text
 ?player=1
 ?player=2
-
-Example: `http://192.168.1.50:2000/?player=1`
-Refreshing the page keeps the same player number as long as `?player=1` is kept in the URL.
 ```
+Example: `http://192.168.1.50:2000/?player=1`
+
+Refreshing the page keeps the same player number as long as `?player=1` is kept in the URL.
 
 ---
 
@@ -36,6 +36,7 @@ Refreshing the page keeps the same player number as long as `?player=1` is kept 
 ---
 
 ## 📁 Project Structure
+```text
 project-folder/
   server.js
   package.json
@@ -44,25 +45,18 @@ project-folder/
     client.js
     style.css
   README.md
-
+```
 ---
 
 ## 🛠 Setup
 Clone project: 
 ```bash
-git clone https://github.com/kieukhang185/sudoku-lan.git
-cd sudoku-lan
+git clone https://github.com/kieukhang185/sudoku-lan.git && cd sudoku-lan
 
-# Install npm dependencies
-npm install
+# Install npm dependencies and start
+npm install && npm start
 ```
 
----
-
-## ▶️ Run
-```
-npm start
-```
 Server runs on **port 3000**.
 
 ---
@@ -72,7 +66,7 @@ Server runs on **port 3000**.
 ```
 http://<HOST-IP>:3000/?player=1
 ```
-Player 2:
+🕹 Player 2:
 ```
 http://<HOST-IP>:3000/?player=2
 ```
@@ -107,6 +101,7 @@ To allow phones/tablets to connect:
 - TCP 3000
 - Allow connection
 - Name: Sudoku-3000
+
 Now LAN devices can connect to your PC.
 
 ---
