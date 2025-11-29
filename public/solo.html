@@ -13,18 +13,29 @@
     </header>
 
     <p class="mode-description">
-      Solo mode (play alone). Board + logic can be implemented later.
+      Play Sudoku alone on a full-screen board. Fill all cells correctly to win!
     </p>
 
-    <div class="board-wrapper">
-      <div id="board" class="board">
-        <!-- You can reuse the same board HTML / JS structure later -->
+    <div class="players-info">
+      <div class="player active">
+        Score: <span id="solo-score">0</span>
       </div>
     </div>
 
-    <div class="status">
-      Solo mode placeholder – you can implement the solo logic here.
+    <div class="board-wrapper">
+      <div id="board" class="board"></div>
     </div>
+
+    <div class="controls">
+      <button id="btn-new">New Puzzle</button>
+      <button id="btn-check">Check</button>
+      <button id="btn-show-solution">Show Solution</button>
+      <button id="btn-clear">Clear Mistakes</button>
+    </div>
+
+    <div id="status" class="status"></div>
   </div>
+
+  <script src="solo.js"></script>
 </body>
 </html>
