@@ -2,35 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Shared Sudoku - 2 Players</title>
+  <title>Sudoku LAN - Home</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div class="app">
-    <h1>Shared Sudoku (2 Players)</h1>
+<body class="home-body">
+  <div class="home-container">
+    <h1>🧩 Sudoku LAN</h1>
+    <p class="home-subtitle">Choose how you want to play</p>
 
-    <div class="players-info">
-      <div id="player1-info" class="player">
-        Player 1 Score: <span id="p1-score">0</span>
-      </div>
-      <div id="player2-info" class="player">
-        Player 2 Score: <span id="p2-score">0</span>
-      </div>
+    <div class="home-modes">
+      <!-- Solo mode -->
+      <a class="mode-card" href="solo.html">
+        <h2>Play Alone</h2>
+        <p>Practice Sudoku by yourself on one board.</p>
+      </a>
+
+      <!-- 1 vs 1 on same board (current game) -->
+      <a class="mode-card" href="shared.html?player=1">
+        <h2>1 vs 1 – Same Board</h2>
+        <p>Two players compete on one shared board in real time.</p>
+        <span class="mode-note">You’ll join as Player 1 by default.</span>
+      </a>
+
+      <!-- 1 vs 1 two boards (placeholder) -->
+      <a class="mode-card" href="duel.html">
+        <h2>1 vs 1 – Two Boards</h2>
+        <p>Each player has their own board. First to finish wins.</p>
+        <span class="mode-note">(Coming soon – placeholder for now)</span>
+      </a>
     </div>
-
-    <div class="who-am-i">
-      You are: <span id="you-are"></span>
-    </div>
-
-    <div id="board" class="board"></div>
-
-    <div class="controls">
-      <button id="btn-reset">Reset Game</button>
-    </div>
-
-    <div id="status" class="status"></div>
   </div>
-
-  <script src="client.js"></script>
 </body>
 </html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sudoku LAN - 1 vs 1 Shared Board</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="top-bar">
+      <a href="index.html" class="back-link">← Home</a>
+      <h1>Shared Sudoku (2 Players)</h1>
+    </header>
+
+    <div class="players-info">
+      <div id="player1-info" class="player">
+        Player 1 Score: <span id="p1-score">0</span>
+      </div>
+      <div id="player2-info" class="player">
+        Player 2 Score: <span id="p2-score">0</span>
+      </div>
+    </div>
+
+    <div class="who-am-i">
+      You are: <span id="you-are"></span>
+    </div>
+
+    <div class="board-wrapper">
+      <div id="board" class="board"></div>
+    </div>
+
+    <div class="controls">
+      <button id="btn-reset">Reset Game</button>
+    </div>
+
+    <div id="status" class="status"></div>
+  </div>
+
+  <script src="client.js"></script>
+</body>
+</html>
