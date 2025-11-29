@@ -37,14 +37,20 @@ Refreshing the page keeps the same player number as long as `?player=1` is kept 
 
 ## 📁 Project Structure
 ```text
-project-folder/
-  server.js
-  package.json
-  public/
-    index.html
-    client.js
-    style.css
-  README.md
+├── package-lock.json
+├── package.json
+└── public
+    ├── assets
+    │   ├── css
+    │   │   └── style.css
+    │   └── js
+    │       ├── client.js
+    │       ├── server.js
+    │       └── solo.js
+    ├── duel.html
+    ├── index.html
+    ├── shared.html
+    └── solo.html
 ```
 ---
 
