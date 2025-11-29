@@ -98,6 +98,16 @@ ip addr
 inet 192.168.56.10/24
 ...
 ```
+
+Directly on PC
+```bash
+# Home page
+http://localhost:3000
+
+http://<HOST-IP>:3000/?player=1
+http://<HOST-IP>:3000/?player=2
+```
+
 ---
 
 ## 🔥 Windows Firewall
