@@ -1,3 +1,5 @@
+// ===== SOLO SUDOKU (PLAY ALONE) =====
+
 // Simple sample puzzles (0 = empty)
 const soloPuzzles = [
   {
@@ -27,35 +29,6 @@ const soloPuzzles = [
       [9,6,1, 5,3,7, 2,8,4],
       [2,8,7, 4,1,9, 6,3,5],
       [3,4,5, 2,8,6, 1,7,9]
-    ]
-  },
-  {
-    // Another puzzle
-    grid: [
-      [0,2,0, 6,0,8, 0,0,0],
-      [5,8,0, 0,0,9, 7,0,0],
-      [0,0,0, 0,4,0, 0,0,0],
-
-      [3,7,0, 0,0,0, 5,0,0],
-      [6,0,0, 0,0,0, 0,0,4],
-      [0,0,8, 0,0,0, 0,1,3],
-
-      [0,0,0, 0,2,0, 0,0,0],
-      [0,0,9, 8,0,0, 0,3,6],
-      [0,0,0, 3,0,6, 0,9,0]
-    ],
-    solution: [
-      [1,2,3, 6,7,8, 9,4,5],
-      [5,8,4, 2,1,9, 7,6,3],
-      [9,6,7, 5,4,3, 1,2,8],
-
-      [3,7,2, 4,6,1, 5,8,9],
-      [6,9,1, 7,8,5, 3,0,4], // slightly imperfect example – you can fix/replace
-      [4,5,8, 9,3,2, 6,1,7],
-
-      [8,3,6, 1,2,4, 0,5,0],
-      [2,1,9, 8,5,7, 4,3,6],
-      [7,4,5, 3,9,6, 2,0,1]
     ]
   }
 ];
@@ -87,6 +60,11 @@ function renderSoloBoard() {
     for (let c = 0; c < 9; c++) {
       const cell = document.createElement("div");
       cell.classList.add("cell");
+      cell.dataset.row = r;
+      cell.dataset.col = c;
+
+      const bg = document.createElement("div");
+      bg.classList.add("cell-bg");
 
       const input = document.createElement("input");
       input.setAttribute("maxlength", "1");
@@ -97,15 +75,35 @@ function renderSoloBoard() {
 
       if (value !== 0) {
         input.value = value;
-        input.disabled = true;
+        input.readOnly = true;
         cell.classList.add("given");
       }
 
       input.addEventListener("input", handleSoloInput);
+
+      cell.appendChild(bg);
       cell.appendChild(input);
       soloBoardEl.appendChild(cell);
     }
   }
+}
+
+// Highlight all cells with the same number as `value`
+function highlightSoloSameNumber(value) {
+  document.querySelectorAll(".cell-bg").forEach(bg => bg.style.background = "");
+
+  if (!value || !/^[1-9]$/.test(value)) return;
+
+  document.querySelectorAll("#board .cell").forEach(cell => {
+    const input = cell.querySelector("input");
+    const bg = cell.querySelector(".cell-bg");
+
+    if (input.value === value) {
+      bg.style.background = cell.classList.contains("given")
+        ? "#ffd86b"
+        : "#ffeaa7";
+    }
+  });
 }
 
 function handleSoloInput(e) {
@@ -114,9 +112,10 @@ function handleSoloInput(e) {
   const c = parseInt(input.dataset.col, 10);
   let val = input.value;
 
-  // Only digits 1–9
+  // Only allow digits 1–9
   if (!/^[1-9]$/.test(val)) {
     input.value = "";
+    highlightSoloSameNumber(""); // clear
     return;
   }
 
@@ -141,6 +140,9 @@ function handleSoloInput(e) {
     updateSoloScore();
     soloStatusEl.textContent = "Wrong number, try again.";
   }
+
+  // Update highlight based on current value
+  highlightSoloSameNumber(val);
 }
 
 function updateSoloScore() {
@@ -160,9 +162,20 @@ function isSoloSolved() {
 function disableSoloInputs() {
   const inputs = soloBoardEl.querySelectorAll("input");
   inputs.forEach((input) => {
-    input.disabled = true;
+    input.readOnly = true;
   });
 }
+
+// Board click: highlight all same numbers (works for given + typed)
+soloBoardEl.addEventListener("click", (e) => {
+  const cell = e.target.closest(".cell");
+  if (!cell) return;
+
+  const input = cell.querySelector("input");
+  const value = input.value;
+
+  highlightSoloSameNumber(value);
+});
 
 // Button handlers
 document.getElementById("btn-new").addEventListener("click", () => {
@@ -171,6 +184,7 @@ document.getElementById("btn-new").addEventListener("click", () => {
   chooseRandomSoloPuzzle();
   renderSoloBoard();
   soloStatusEl.textContent = "New puzzle started.";
+  highlightSoloSameNumber(""); // clear
 });
 
 document.getElementById("btn-check").addEventListener("click", () => {
@@ -207,12 +221,13 @@ document.getElementById("btn-show-solution").addEventListener("click", () => {
       const cell = soloBoardEl.children[index];
       const input = cell.querySelector("input");
       input.value = soloSolutionGrid[r][c];
-      input.disabled = true;
+      input.readOnly = true;
       soloGrid[r][c] = soloSolutionGrid[r][c];
       input.classList.remove("invalid");
     }
   }
   soloStatusEl.textContent = "Solution shown.";
+  highlightSoloSameNumber(""); // clear highlight
 });
 
 document.getElementById("btn-clear").addEventListener("click", () => {
@@ -227,6 +242,7 @@ document.getElementById("btn-clear").addEventListener("click", () => {
     }
   });
   soloStatusEl.textContent = "Mistakes cleared.";
+  highlightSoloSameNumber(""); // clear highlight
 });
 
 // Initialize solo mode

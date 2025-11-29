@@ -159,24 +159,31 @@ body {
 
 /* Cells */
 .cell {
+  position: relative;
   border: 1px solid #aaa;
-  text-align: center;
-  font-size: 18px;
-  box-sizing: border-box;
+}
+
+.cell-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;  /* default */
+  pointer-events: none;      /* does NOT block clicks */
+  z-index: 1;
 }
 
 .cell input {
+  position: relative;
+  z-index: 2;                /* sits ABOVE background */
   width: 100%;
   height: 100%;
   border: none;
+  background: transparent;   /* important */
   text-align: center;
-  font-size: 1.5rem;
-  outline: none;
+  font-size: 24px;
 }
 
-.cell.given {
-  background: #ececec;
-}
 
 /* Controls + status */
 .controls {
