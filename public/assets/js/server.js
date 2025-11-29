@@ -1,7 +1,7 @@
-import { generateSudoku } from './game.js';
+import { generateSudokuCommon } from './game.js';
 import express from 'express';
 import http from 'http';
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws'; 
 
 const app = express();
 const server = http.createServer(app);
@@ -10,7 +10,7 @@ const wss = new WebSocketServer( {server} );
 app.use(express.static("public"));
 
 // SIMPLE PUZZLE
-const { grid, solution } = generateSudoku("medium");
+const { grid, solution } = generateSudokuCommon("medium");
 
 const puzzle = {
   grid,

@@ -1,15 +1,13 @@
+import { 
+  buildBoardCommon,
+  attachClickHighlightCommon,
+  renderGridCommon,
+  highlightSameNumberCommon 
+} from './game.js';
+
 let socket;
 let myPlayerNumber = null;
-let lastState = null; // keep last server state to help with highlighting
-
-// Read ?player=1 or ?player=2 from URL
-function getDesiredPlayerFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  const p = params.get("player");
-  if (p === "1" || p === "2") return parseInt(p, 10);
-  return null;
-}
-const desiredPlayer = getDesiredPlayerFromUrl();
+let lastState = null;
 
 const boardEl = document.getElementById("board");
 const statusEl = document.getElementById("status");
@@ -21,6 +19,15 @@ const player2Info = document.getElementById("player2-info");
 
 let boardInitialized = false;
 
+// Read ?player=1 or ?player=2 from URL
+function getDesiredPlayerFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const p = params.get("player");
+  if (p === "1" || p === "2") return parseInt(p, 10);
+  return null;
+}
+const desiredPlayer = getDesiredPlayerFromUrl();
+
 function connect() {
   const loc = window.location;
   const proto = loc.protocol === "https:" ? "wss" : "ws";
@@ -28,9 +35,6 @@ function connect() {
   socket = new WebSocket(wsUrl);
 
   socket.onopen = () => {
-    console.log("WS Connected");
-
-    // Tell server which player we want
     socket.send(JSON.stringify({
       type: "join",
       desiredPlayer: desiredPlayer
@@ -69,47 +73,8 @@ function connect() {
 }
 
 function buildBoard() {
-  boardEl.innerHTML = "";
-  for (let r = 0; r < 9; r++) {
-    for (let c = 0; c < 9; c++) {
-      const cell = document.createElement("div");
-      cell.classList.add("cell");
-      cell.dataset.row = r;
-      cell.dataset.col = c;
-
-      const bg = document.createElement("div");
-      bg.classList.add("cell-bg");
-
-      const input = document.createElement("input");
-      input.setAttribute("maxlength", "1");
-      input.dataset.row = r;
-      input.dataset.col = c;
-
-      input.addEventListener("input", handleInput);
-
-      cell.appendChild(bg);
-      cell.appendChild(input);
-      boardEl.appendChild(cell);
-    }
-  }
-}
-
-// Highlight all cells with the same number as `value`
-function highlightSharedSameNumber(value) {
-  document.querySelectorAll(".cell-bg").forEach(bg => bg.style.background = "");
-
-  if (!value || !/^[1-9]$/.test(value)) return;
-
-  document.querySelectorAll("#board .cell").forEach(cell => {
-    const input = cell.querySelector("input");
-    const bg = cell.querySelector(".cell-bg");
-
-    if (input.value === value) {
-      bg.style.background = cell.classList.contains("given")
-        ? "#ffd86b"
-        : "#ffeaa7";
-    }
-  });
+  buildBoardCommon(boardEl, handleInputWrapper);
+  attachClickHighlightCommon(boardEl);
 }
 
 function updateUI(state) {
@@ -118,43 +83,30 @@ function updateUI(state) {
     boardInitialized = true;
   }
 
-  // Fill board
-  for (let r = 0; r < 9; r++) {
-    for (let c = 0; c < 9; c++) {
-      const index = r * 9 + c;
-      const cell = boardEl.children[index];
-      const input = cell.querySelector("input");
+  renderGridCommon(boardEl, state.grid);
 
-      if (state.grid[r][c] === 0) {
-        input.value = "";
-        input.readOnly = false;
-        cell.classList.remove("given");
-      } else {
-        input.value = state.grid[r][c];
-        input.readOnly = true;          // given / locked
-        cell.classList.add("given");
-      }
-    }
-  }
-
-  // Update scores
+  // scores
   p1ScoreEl.textContent = state.scores[1];
   p2ScoreEl.textContent = state.scores[2];
 
-  // Current player highlight
+  // current player highlight
   player1Info.classList.toggle("active", state.currentPlayer === 1);
   player2Info.classList.toggle("active", state.currentPlayer === 2);
 
-  // Status display
   statusEl.textContent = state.status;
 
-  // Re-apply highlight if something is focused
+  // if something is focused with a value, keep highlight in sync
   const active = boardEl.querySelector("input:focus");
   if (active && active.value) {
-    highlightSharedSameNumber(active.value);
+    highlightSameNumberCommon(boardEl, active.value);
   } else {
-    highlightSharedSameNumber("");
+    highlightSameNumberCommon(boardEl, "");
   }
+}
+
+// wrapper to reuse old handleInput style
+function handleInputWrapper(row, col, inputEl) {
+  handleInput({ target: inputEl });
 }
 
 function handleInput(e) {
@@ -173,27 +125,16 @@ function handleInput(e) {
     }));
   }
 
-  // Locally update highlight
-  highlightSharedSameNumber(value);
+  // local highlight
+  highlightSameNumberCommon(boardEl, value);
 }
 
-// Board click: highlight same number for that cell (works on given + typed)
-boardEl.addEventListener("click", (e) => {
-  const cell = e.target.closest(".cell");
-  if (!cell) return;
-
-  const input = cell.querySelector("input");
-  const value = input.value;
-
-  highlightSharedSameNumber(value);
-});
-
-// Reset button
+// Reset
 document.getElementById("btn-reset").addEventListener("click", () => {
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify({ type: "reset" }));
   }
-  highlightSharedSameNumber("");
+  highlightSameNumberCommon(boardEl, "");
 });
 
 connect();
