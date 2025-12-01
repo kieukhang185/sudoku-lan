@@ -10,6 +10,11 @@ export function buildBoardCommon(containerEl, onInputCallback) {
       cell.dataset.row = r;
       cell.dataset.col = c;
 
+      if (r % 3 === 0) cell.classList.add("block-top");         // top bold
+      if (c % 3 === 0) cell.classList.add("block-left");        // left bold
+      if (r % 3 === 2) cell.classList.add("block-bottom");      // bottom bold
+      if (c % 3 === 2) cell.classList.add("block-right");       // right bold
+
       const bg = document.createElement("div");
       bg.classList.add("cell-bg");
 
