@@ -38,25 +38,6 @@ Refreshing the page keeps the same player number as long as `?player=1` is kept 
 
 ---
 
-## 📁 Project Structure
-```text
-├── package-lock.json
-├── package.json
-└── public
-    ├── assets
-    │   ├── css
-    │   │   └── style.css
-    │   └── js
-    │       ├── client.js
-    │       ├── server.js
-    │       └── solo.js
-    ├── duel.html
-    ├── index.html
-    ├── shared.html
-    └── solo.html
-```
----
-
 ## 🛠 Setup
 Clone project: 
 ```bash
@@ -132,11 +113,6 @@ Now LAN devices can connect to your PC.
 
 ---
 
-## 🔧 Customization
-Edit puzzle in `server.js`.
-
----
-
 ## 🚀 Future Ideas
 - Generator
 - Single player
@@ -149,6 +125,6 @@ Edit puzzle in `server.js`.
 ---
 
 ## ❤️ Credits
-- Created by: You
+- Created by: Khang Kieu
 - Powered by: Node.js, WebSockets, HTML/CSS/JS
 - Feel free to modify, enhance, and share!
