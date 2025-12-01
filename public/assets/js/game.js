@@ -18,6 +18,9 @@ export function buildBoardCommon(containerEl, onInputCallback) {
       const bg = document.createElement("div");
       bg.classList.add("cell-bg");
 
+      const notes = document.createElement("div");
+      notes.classList.add("cell-notes");
+
       const input = document.createElement("input");
       input.setAttribute("maxlength", "1");
       input.dataset.row = r;
@@ -27,9 +30,49 @@ export function buildBoardCommon(containerEl, onInputCallback) {
         input.addEventListener("input", () => onInputCallback(r, c, input));
       }
 
+      cell.appendChild(notes);
       cell.appendChild(bg);
       cell.appendChild(input);
       containerEl.appendChild(cell);
+    }
+  }
+}
+
+export function createEmptyNotesGrid() {
+  const notes = [];
+  for (let r = 0; r < 9; r++) {
+    notes[r] = [];
+    for (let c = 0; c < 9; c++) {
+      notes[r][c] = new Set();
+    }
+  }
+  return notes;
+}
+
+// Render notes for a specific cell
+export function renderCellNotes(containerEl, notesGrid, row, col) {
+  const index = row * 9 + col;
+  const cell = containerEl.children[index];
+  if (!cell) return;
+  const notesEl = cell.querySelector(".cell-notes");
+  if (!notesEl) return;
+
+  notesEl.innerHTML = "";
+  const cellNotes = Array.from(notesGrid[row][col]).sort();
+
+  for (let n = 1; n <= 9; n++) {
+    const span = document.createElement("span");
+    const s = String(n);
+    span.textContent = cellNotes.includes(s) ? s : "";
+    notesEl.appendChild(span);
+  }
+}
+
+// Clear all notes drawings (does not clear data)
+export function renderAllNotes(containerEl, notesGrid) {
+  for (let r = 0; r < 9; r++) {
+    for (let c = 0; c < 9; c++) {
+      renderCellNotes(containerEl, notesGrid, r, c);
     }
   }
 }

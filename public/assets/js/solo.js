@@ -3,19 +3,24 @@ import {
   buildBoardCommon,
   attachClickHighlightCommon,
   renderGridCommon,
-  highlightSameNumberCommon
+  highlightSameNumberCommon,
+  createEmptyNotesGrid,
+  renderAllNotes,
+  renderCellNotes
 } from './game.js';
 import { getQueryParam } from './utils.js';
 
 let soloGrid = [];
 let soloSolution = [];
 let soloScore = 0;
+let pencilMode = false;
+let soloNotes = createEmptyNotesGrid();
 
 const soloBoardEl = document.getElementById("board");
 const soloStatusEl = document.getElementById("status");
 const soloScoreEl = document.getElementById("solo-score");
-
-const difficulty = getQueryParam("level") || "medium";
+const pencilBtn = document.getElementById("btn-pencil");
+const difficulty = getQueryParam("difficulty");
 
 // Start / restart solo game
 function startSoloGame(difficulty) {
@@ -25,6 +30,7 @@ function startSoloGame(difficulty) {
   soloSolution = solution;
   soloScore = 0;
   soloScoreEl.textContent = soloScore;
+  soloNotes = createEmptyNotesGrid();
 
   if (!soloBoardEl.dataset.built) {
     buildBoardCommon(soloBoardEl, handleSoloInputWrapper);
@@ -33,7 +39,19 @@ function startSoloGame(difficulty) {
   }
 
   renderGridCommon(soloBoardEl, soloGrid);
+  renderAllNotes(soloBoardEl, soloNotes);
   soloStatusEl.textContent = "Solo mode – fill the board!";
+}
+
+function togglePencil(cell, val) {
+  const pencilContainer = cell.querySelector('.pencil-container');
+  if (!pencilContainer) return;
+
+  const pencil = pencilContainer.querySelector(`.pencil[data-value="${val}"]`);
+  if (!pencil) return;
+
+  // Toggle the small number
+  pencil.textContent = pencil.textContent ? "" : val;
 }
 
 // Wrapper so common builder can reuse existing logic style
@@ -55,6 +73,28 @@ function handleSoloInput(e) {
     return;
   }
 
+  if (pencilMode) {
+    input.value = ""; // keep main cell empty in pencil mode
+
+    if (!/^[1-9]$/.test(val)) {
+      // if not a valid digit, just ignore
+      renderCellNotes(soloBoardEl, soloNotes, row, col);
+      return;
+    }
+
+    const set = soloNotes[row][col];
+    const s = val;
+
+    if (set.has(s)) {
+      set.delete(s);   // toggle off
+    } else {
+      set.add(s);      // toggle on
+    }
+
+    renderCellNotes(soloBoardEl, soloNotes, row, col);
+    return;
+  }
+
   const correct = soloSolution[row][col].toString();
 
   if (val === correct) {
@@ -62,6 +102,9 @@ function handleSoloInput(e) {
     input.classList.remove("invalid");
     soloScore += 1;
     soloScoreEl.textContent = soloScore;
+
+    soloNotes[row][col].clear();
+    renderCellNotes(soloBoardEl, soloNotes, row, col);
 
     if (isSoloSolved()) {
       soloStatusEl.textContent = `You solved the puzzle! 🎉 Score: ${soloScore}`;
@@ -155,6 +198,13 @@ document.getElementById("btn-clear").addEventListener("click", () => {
   soloStatusEl.textContent = "Mistakes cleared.";
   highlightSameNumberCommon(soloBoardEl, "", -1, -1);
 });
+
+if (pencilBtn) {
+  pencilBtn.addEventListener("click", () => {
+    pencilMode = !pencilMode;
+    pencilBtn.textContent = pencilMode ? "Pencil: ON " : "Pencil: OFF";
+  });
+}
 
 // Init on load
 startSoloGame(difficulty);

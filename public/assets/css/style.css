@@ -235,6 +235,25 @@ body {
   font-size: 24px;
 }
 
+/* Notes container inside each cell */
+.cell-notes {
+  position: absolute;
+  inset: 2px; /* small padding all around */
+  font-size: 13px;
+  line-height: 10px;
+  color: #555;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  pointer-events: none; /* don't block clicks */
+  z-index: 2;
+}
+
+.cell-notes span {
+  text-align: center;
+  opacity: 0.8;
+}
+
 .block-top {
   border-top: 2px solid #000;
 }
