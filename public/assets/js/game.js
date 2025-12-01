@@ -1,4 +1,5 @@
 // ---------- Board & Rendering ----------
+// Build an empty 9x9 board inside containerEl
 export function buildBoardCommon(containerEl, onInputCallback) {
   containerEl.innerHTML = "";
 
@@ -50,8 +51,8 @@ export function renderGridCommon(containerEl, grid) {
   });
 }
 
-// Highlight all cells with same number inside this container
-export function highlightSameNumberCommon(containerEl, value) {
+// Highlight all cells with the same number, and highlight row/col/box of a specific cell
+export function highlightSameNumberCommon(containerEl, value, row, col) {
   const bgs = containerEl.querySelectorAll(".cell-bg");
   bgs.forEach(bg => {
     bg.style.background = "";
@@ -62,13 +63,21 @@ export function highlightSameNumberCommon(containerEl, value) {
   const cells = containerEl.querySelectorAll(".cell");
   cells.forEach(cell => {
     const input = cell.querySelector("input");
+    const r = parseInt(cell.dataset.row);
+    const c = parseInt(cell.dataset.col);
     const bg = cell.querySelector(".cell-bg");
     if (!input || !bg) return;
 
+    // Highlight matching cells
     if (input.value === value) {
+      console.log(`Matching cell at row: ${r}, col: ${c}`);
       bg.style.background = cell.classList.contains("given")
         ? "#ffd86b"   // stronger for givens
         : "#ffeaa7";  // normal cells
+    } else if (r === row || c === col || (Math.floor(r / 3) === Math.floor(row / 3) && Math.floor(c / 3) === Math.floor(col / 3))) {
+      bg.style.background = "#dfe6e9"; // highlight row/col/box
+    } else {
+      bg.style.background = ""; // no highlight
     }
   });
 }
@@ -79,10 +88,12 @@ export function attachClickHighlightCommon(containerEl) {
     const cell = e.target.closest(".cell");
     if (!cell) return;
 
+    const row = parseInt(cell.dataset.row);
+    const col = parseInt(cell.dataset.col);
     const input = cell.querySelector("input");
     const value = input ? input.value : "";
 
-    highlightSameNumberCommon(containerEl, value);
+    highlightSameNumberCommon(containerEl, value, row, col);
   });
 }
 
@@ -97,10 +108,12 @@ function emptyBoardCommon() {
   return board;
 }
 
+// Deep copy a 2D array
 function copyBoardCommon(board) {
   return board.map(row => row.slice());
 }
 
+// Shuffle an array in place
 function shuffleArrayCommon(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -110,6 +123,7 @@ function shuffleArrayCommon(arr) {
   return arr;
 }
 
+// Check if it's safe to place a number in a given position
 function isSafeCommon(board, row, col, num) {
   for (let x = 0; x < 9; x++) {
     if (board[row][x] === num) return false;
@@ -131,6 +145,7 @@ function isSafeCommon(board, row, col, num) {
   return true;
 }
 
+// Backtracking algorithm to fill the board
 function fillBoardCommon(board) {
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
@@ -150,6 +165,7 @@ function fillBoardCommon(board) {
   return true;
 }
 
+// Carve holes in a solved board to create a puzzle
 function carveHolesCommon(solvedBoard, difficulty = "medium") {
   const grid = copyBoardCommon(solvedBoard);
   let holes;

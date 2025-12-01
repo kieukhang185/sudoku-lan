@@ -28,6 +28,7 @@ function getDesiredPlayerFromUrl() {
 }
 const desiredPlayer = getDesiredPlayerFromUrl();
 
+// Connect to WebSocket server
 function connect() {
   const loc = window.location;
   const proto = loc.protocol === "https:" ? "wss" : "ws";
@@ -72,6 +73,7 @@ function connect() {
   };
 }
 
+// Build the board once
 function buildBoard() {
   buildBoardCommon(boardEl, handleInputWrapper);
   attachClickHighlightCommon(boardEl);
@@ -98,9 +100,9 @@ function updateUI(state) {
   // if something is focused with a value, keep highlight in sync
   const active = boardEl.querySelector("input:focus");
   if (active && active.value) {
-    highlightSameNumberCommon(boardEl, active.value);
+    highlightSameNumberCommon(boardEl, active.value, parseInt(active.dataset.row, 10), parseInt(active.dataset.col, 10));
   } else {
-    highlightSameNumberCommon(boardEl, "");
+    highlightSameNumberCommon(boardEl, "", -1, -1);
   }
 }
 
@@ -109,6 +111,7 @@ function handleInputWrapper(row, col, inputEl) {
   handleInput({ target: inputEl });
 }
 
+// Handle input in multiplayer mode
 function handleInput(e) {
   const input = e.target;
   const row = parseInt(input.dataset.row, 10);
@@ -129,7 +132,7 @@ function handleInput(e) {
   highlightSameNumberCommon(boardEl, value);
 }
 
-// Reset
+// reset button
 document.getElementById("btn-reset").addEventListener("click", () => {
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify({ type: "reset" }));
@@ -137,4 +140,5 @@ document.getElementById("btn-reset").addEventListener("click", () => {
   highlightSameNumberCommon(boardEl, "");
 });
 
+// Start connection
 connect();

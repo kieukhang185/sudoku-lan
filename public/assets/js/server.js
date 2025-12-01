@@ -44,7 +44,8 @@ function resetState(){
     state.status = "Player 1's turn."
 }
 
-function boardcastState(){
+// Broadcast current state to all connected clients
+function broadcastState(){
     const msg = JSON.stringify({ type: "state", state });
     wss.clients.forEach((client) => {
         if (client.readyState == WebSocket.OPEN) client.send(msg)
@@ -123,7 +124,7 @@ wss.on("connection", (ws) => {
             if (value === "") {
                 state.grid[row][col] = 0;
                 state.status = `Player ${player} cleared a cell.`;
-                boardcastState();
+                broadcastState();
                 return;
             }
 
@@ -144,14 +145,14 @@ wss.on("connection", (ws) => {
                 state.status = `Player ${player} wrong! ${state.currentPlayer}'s turn.`;
             }
 
-            boardcastState();
+            broadcastState();
             return;
         }
 
         // Reset game
-        if (date === "reset") {
+        if (data.type === "reset") {
             resetState();
-            boardcastState();
+            broadcastState();
             return;
         }
     });

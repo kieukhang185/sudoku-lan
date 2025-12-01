@@ -4,31 +4,10 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node public/assets/js/server.js",
-    "prepare": "husky install",
-    "lint": "eslint ."
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.css": [
-      "git add"
-    ],
-    "*.html": [
-      "git add"
-    ]
+    "start": "node public/assets/js/server.js"
   },
   "dependencies": {
     "express": "^4.21.2",
     "ws": "^8.18.3"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "eslint": "^9.39.1",
-    "globals": "^16.5.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.2.7"
   }
 }

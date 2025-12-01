@@ -37,6 +37,7 @@ function handleSoloInputWrapper(row, col, inputEl) {
   handleSoloInput({ target: inputEl });
 }
 
+// Handle input in solo mode
 function handleSoloInput(e) {
   const input = e.target;
   const row = parseInt(input.dataset.row, 10);
@@ -46,7 +47,7 @@ function handleSoloInput(e) {
   // Only allow digits 1–9
   if (!/^[1-9]$/.test(val)) {
     input.value = "";
-    highlightSameNumberCommon(soloBoardEl, "");
+    highlightSameNumberCommon(soloBoardEl, "", -1, -1);
     return;
   }
 
@@ -73,9 +74,10 @@ function handleSoloInput(e) {
   }
 
   // Update highlight based on current value
-  highlightSameNumberCommon(soloBoardEl, val);
+  highlightSameNumberCommon(soloBoardEl, val, row, col);
 }
 
+// Check if solo puzzle is completely and correctly solved
 function isSoloSolved() {
   for (let r = 0; r < 9; r++) {
     for (let c = 0; c < 9; c++) {
@@ -86,6 +88,7 @@ function isSoloSolved() {
   return true;
 }
 
+// Disable all inputs on solo board (after solved or showing solution)
 function disableSoloBoard() {
   const inputs = soloBoardEl.querySelectorAll("input");
   inputs.forEach((input) => {
@@ -93,11 +96,12 @@ function disableSoloBoard() {
   });
 }
 
-// Buttons
+// New game button
 document.getElementById("btn-new").addEventListener("click", () => {
   startSoloGame("medium");
 });
 
+// Check for mistakes
 document.getElementById("btn-check").addEventListener("click", () => {
   let allCorrect = true;
   const inputs = soloBoardEl.querySelectorAll("input");
@@ -120,13 +124,15 @@ document.getElementById("btn-check").addEventListener("click", () => {
     : "There are mistakes highlighted in red.";
 });
 
+// Show solution
 document.getElementById("btn-show-solution").addEventListener("click", () => {
   renderGridCommon(soloBoardEl, soloSolution);
   disableSoloBoard();
   soloStatusEl.textContent = "Solution shown.";
-  highlightSameNumberCommon(soloBoardEl, "");
+  highlightSameNumberCommon(soloBoardEl, "", -1, -1);
 });
 
+// Clear mistakes
 document.getElementById("btn-clear").addEventListener("click", () => {
   const inputs = soloBoardEl.querySelectorAll("input");
   inputs.forEach((input) => {
@@ -142,7 +148,7 @@ document.getElementById("btn-clear").addEventListener("click", () => {
   });
 
   soloStatusEl.textContent = "Mistakes cleared.";
-  highlightSameNumberCommon(soloBoardEl, "");
+  highlightSameNumberCommon(soloBoardEl, "", -1, -1);
 });
 
 // Init on load
