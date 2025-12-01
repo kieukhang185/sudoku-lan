@@ -78,6 +78,57 @@ body {
   background: #f0f0f0;
 }
 
+.menu {
+  display: none;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.menu.active,
+.menu:not(.hidden) {
+  display: block;
+}
+
+.menu-btn {
+  display: block;
+  width: 220px;
+  margin: 10px auto;
+  padding: 12px;
+  font-size: 18px;
+  background: #333;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.menu-btn:hover {
+  opacity: 0.9;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.divider {
+  margin: 10px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+#join-room-id {
+  width: 200px;
+  padding: 8px;
+  margin: 8px 0 12px 0;
+  font-size: 16px;
+  text-align: center;
+}
+
+.title {
+  text-align: center;
+  margin-top: 30px;
+}
+
+
 /* ========== GAME PAGES ========== */
 
 .app {

@@ -5,6 +5,7 @@ import {
   renderGridCommon,
   highlightSameNumberCommon
 } from './game.js';
+import { getQueryParam } from './utils.js';
 
 let soloGrid = [];
 let soloSolution = [];
@@ -14,8 +15,11 @@ const soloBoardEl = document.getElementById("board");
 const soloStatusEl = document.getElementById("status");
 const soloScoreEl = document.getElementById("solo-score");
 
+const difficulty = getQueryParam("level") || "medium";
+
 // Start / restart solo game
-function startSoloGame(difficulty = "medium") {
+function startSoloGame(difficulty) {
+  console.log("Starting solo game with difficulty:", difficulty);
   const { grid, solution } = generateSudokuCommon(difficulty);
   soloGrid = grid;
   soloSolution = solution;
@@ -98,7 +102,8 @@ function disableSoloBoard() {
 
 // New game button
 document.getElementById("btn-new").addEventListener("click", () => {
-  startSoloGame("medium");
+  // TODO: confirm if not started? and choose difficulty?
+  startSoloGame(difficulty);
 });
 
 // Check for mistakes
@@ -152,4 +157,4 @@ document.getElementById("btn-clear").addEventListener("click", () => {
 });
 
 // Init on load
-startSoloGame("medium");
+startSoloGame(difficulty);

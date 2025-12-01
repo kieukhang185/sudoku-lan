@@ -4,6 +4,7 @@ import {
   renderGridCommon,
   highlightSameNumberCommon 
 } from './game.js';
+import { getQueryParam } from './utils.js';
 
 let socket;
 let myPlayerNumber = null;
@@ -20,10 +21,7 @@ const player2Info = document.getElementById("player2-info");
 let boardInitialized = false;
 
 // Read ?player=1 or ?room=2 from URL
-function getQueryParam(name) {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(name);
-}
+
 
 const desiredPlayer = (() => {
   const p = getQueryParam("player");

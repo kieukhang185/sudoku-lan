@@ -11,52 +11,40 @@
     <h1>🧩 Sudoku LAN</h1>
     <p class="home-subtitle">Choose how you want to play</p>
 
-    <div class="home-modes">
-      <!-- Solo mode -->
-      <a class="mode-card" href="solo.html">
-        <h2>Play Alone</h2>
-        <p>Practice Sudoku by yourself on one board.</p>
-      </a>
+    <div id="home-modes">
+      <!-- Main Mode Menu -->
+      <div id="menu-main" class="menu active">
+        <button class="menu-btn" id="btn-solo">Play Solo</button>
+        <button class="menu-btn" id="btn-multi">1 vs 1 - One Board</button>
+        <button class="menu-btn" id="btn-multi2">1 vs 1 - Two Boards</button>
+      </div>
 
-      <!-- 1 vs 1 on same board (current game) -->
-      <button type="button" id="btn-create-room">Create New Room</button>
-      <a class="mode-card" href="shared.html?player=1">
-        <h2>1 vs 1 – Same Board</h2>
-        <p>Two players compete on one shared board in real time.</p>
-        <span class="mode-note">You’ll join as Player 1 by default.</span>
-      </a>
+      <!-- Solo Difficulty Menu -->
+      <div id="menu-solo" class="menu hidden">
+        <h2>Select Difficulty</h2>
+        <button class="menu-btn level-btn" data-level="easy">Easy</button>
+        <button class="menu-btn level-btn" data-level="medium">Medium</button>
+        <button class="menu-btn level-btn" data-level="hard">Hard</button>
+        <button class="menu-btn back-btn">← Back</button>
+      </div>
 
-      <!-- 1 vs 1 two boards (placeholder) -->
-      <a class="mode-card" href="duel.html">
-        <h2>1 vs 1 – Two Boards</h2>
-        <p>Each player has their own board. First to finish wins.</p>
-        <span class="mode-note">(Coming soon – placeholder for now)</span>
-      </a>
+      <!-- Multiplayer Menu -->
+      <div id="menu-multi" class="menu hidden">
+        <h2>1 vs 1 Multiplayer</h2>
+
+        <label for="join-room-id">Enter Room ID to Join:</label>
+        <input id="join-room-id" type="text" placeholder="room123" />
+
+        <button class="menu-btn" id="btn-join-room">Join Room</button>
+
+        <div class="divider">— OR —</div>
+
+        <button class="menu-btn" id="btn-create-room">Create New Room</button>
+        <button class="menu-btn back-btn">← Back</button>
+      </div>
     </div>
+
   </div>
-  <script>
-    // Simple room id generator
-    function generateRoomId() {
-      return Math.random().toString(36).substring(2, 10);
-    }
-
-    // Navigate to solo mode
-    const soloBtn = document.getElementById("btn-solo");
-    if (soloBtn) {
-      soloBtn.addEventListener("click", () => {
-        window.location.href = "solo.html";
-      });
-    }
-
-    // Create a new room and go as Player 1
-    const createRoomBtn = document.getElementById("btn-create-room");
-    if (createRoomBtn) {
-      createRoomBtn.addEventListener("click", () => {
-        const roomId = generateRoomId();
-        // IMPORTANT: use &player=1, not ?player=1
-        window.location.href = `shared.html?room=${encodeURIComponent(roomId)}&player=1`;
-      });
-    }
-  </script>
+  <script type="module" src="assets/js/home.js"></script>
 </body>
 </html>
