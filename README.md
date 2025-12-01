@@ -74,7 +74,6 @@ Wireless LAN adapter Wi-Fi 2:
 - Linux/macOS:
 ```bash
 ip addr
-
 ...
 inet 192.168.56.10/24
 ...
@@ -103,6 +102,34 @@ To allow phones/tablets to connect:
 - Name: Sudoku-3000
 
 Now LAN devices can connect to your PC.
+
+- Nginx config to proxy to Node 3000 in case the the nextwork block on linux EC2:
+```bash
+sudo cat "
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+" > /etc/nginx/sites-available/sudoku-lan
+
+sudo ln -s /etc/nginx/sites-available/sudoku /etc/nginx/sites-enabled/sudoku-lan
+sudo rm /etc/nginx/sites-enabled/default
+sudo nginx -t
+sudo systemctl reload nginx
+```
+Now try in your browser: with port 80 opened
+```bash
+http://<EC2-PUBLIC-IP>
+```
 
 ---
 
