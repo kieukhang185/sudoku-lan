@@ -19,6 +19,7 @@
       </a>
 
       <!-- 1 vs 1 on same board (current game) -->
+      <button type="button" id="btn-create-room">Create New Room</button>
       <a class="mode-card" href="shared.html?player=1">
         <h2>1 vs 1 – Same Board</h2>
         <p>Two players compete on one shared board in real time.</p>
@@ -33,5 +34,29 @@
       </a>
     </div>
   </div>
+  <script>
+    // Simple room id generator
+    function generateRoomId() {
+      return Math.random().toString(36).substring(2, 10);
+    }
+
+    // Navigate to solo mode
+    const soloBtn = document.getElementById("btn-solo");
+    if (soloBtn) {
+      soloBtn.addEventListener("click", () => {
+        window.location.href = "solo.html";
+      });
+    }
+
+    // Create a new room and go as Player 1
+    const createRoomBtn = document.getElementById("btn-create-room");
+    if (createRoomBtn) {
+      createRoomBtn.addEventListener("click", () => {
+        const roomId = generateRoomId();
+        // IMPORTANT: use &player=1, not ?player=1
+        window.location.href = `shared.html?room=${encodeURIComponent(roomId)}&player=1`;
+      });
+    }
+  </script>
 </body>
 </html>

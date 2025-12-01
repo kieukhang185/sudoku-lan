@@ -19,14 +19,23 @@ const player2Info = document.getElementById("player2-info");
 
 let boardInitialized = false;
 
-// Read ?player=1 or ?player=2 from URL
-function getDesiredPlayerFromUrl() {
+// Read ?player=1 or ?room=2 from URL
+function getQueryParam(name) {
   const params = new URLSearchParams(window.location.search);
-  const p = params.get("player");
+  return params.get(name);
+}
+
+const desiredPlayer = (() => {
+  const p = getQueryParam("player");
   if (p === "1" || p === "2") return parseInt(p, 10);
   return null;
+})();
+
+function generateRoomId() {
+  return Math.random().toString(36).substring(2, 10);
 }
-const desiredPlayer = getDesiredPlayerFromUrl();
+
+const roomId = getQueryParam("room") || generateRoomId();
 
 // Connect to WebSocket server
 function connect() {
@@ -38,6 +47,7 @@ function connect() {
   socket.onopen = () => {
     socket.send(JSON.stringify({
       type: "join",
+      roomId,
       desiredPlayer: desiredPlayer
     }));
   };
@@ -48,6 +58,8 @@ function connect() {
     if (data.type === "assign-player") {
       myPlayerNumber = data.player;
       youAreEl.textContent = "Player " + myPlayerNumber;
+      const roomSpan = document.getElementById("room-id");
+      if (roomSpan) roomSpan.textContent = data.roomId || roomId;
       return;
     }
 
@@ -129,7 +141,7 @@ function handleInput(e) {
   }
 
   // local highlight
-  highlightSameNumberCommon(boardEl, value);
+    highlightSameNumberCommon(boardEl, value, row, col);
 }
 
 // reset button
@@ -137,7 +149,7 @@ document.getElementById("btn-reset").addEventListener("click", () => {
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify({ type: "reset" }));
   }
-  highlightSameNumberCommon(boardEl, "");
+  highlightSameNumberCommon(boardEl, "", -1, -1);
 });
 
 // Start connection

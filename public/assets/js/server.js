@@ -9,53 +9,56 @@ const wss = new WebSocketServer( {server} );
 
 app.use(express.static("public"));
 
-// SIMPLE PUZZLE
-const { grid, solution } = generateSudokuCommon("medium");
+const rooms = {};
 
-const puzzle = {
-  grid,
-  solution
-};
+function createRoom(roomId) {
 
-// Track player sockets
-let players = {
-  1: null,
-  2: null
-};
+    const { grid, solution } = generateSudokuCommon("medium");
+    const puzzle = {
+        grid,
+        solution
+    };
 
-// Share game state
-let state = {
-    grid: JSON.parse(JSON.stringify(puzzle.grid)),
-    scores: { 1: 0, 2: 0}, // Score both 2 player
-    currentPlayer: 1,
-    status: "Player 1's turn."
+    rooms[roomId] = {
+        puzzle,
+        state: {
+            grid: JSON.parse(JSON.stringify(puzzle.grid)),
+            scores: { 1: 0, 2: 0}, // Score both 2 player
+            currentPlayer: 1,
+            status: "Player 1's turn."
+        },
+        players: {
+            1: null,
+            2: null
+        }
+    };
 }
 
-// Game reset
-function resetState(){
-
-    const { grid, solution } = generateSudoku("medium");
-    puzzle.grid = grid;
-    puzzle.solution = solution;
-
-    state.grid = JSON.parse(JSON.stringify(puzzle.grid));
-    state.scores = { 1: 0, 2: 0},
-    state.currentPlayer =  1,
-    state.status = "Player 1's turn."
+function getOrCreateRoom(roomId) {
+  if (!rooms[roomId]) {
+    createRoom(roomId);
+  }
+  return rooms[roomId];
 }
 
-// Broadcast current state to all connected clients
-function broadcastState(){
-    const msg = JSON.stringify({ type: "state", state });
+// Broadcast game state to all clients in a room
+function broadcastRoomState(roomId) {
+    const room = rooms[roomId];
+    if (!room) return;
+    const msg = JSON.stringify({ type: "state", state: room.state });
+
     wss.clients.forEach((client) => {
-        if (client.readyState == WebSocket.OPEN) client.send(msg)
+        if (client.readyState === WebSocket.OPEN && client.roomId === roomId) {
+            client.send(msg);
+        }
     });
 }
 
 // Handle WebSocket connections
 wss.on("connection", (ws) => {
     console.log("Client connected");
-    let assignedPlayer = null;
+    ws.roomId = null;
+    ws.playerNumber = null;
 
     ws.on("message", (message) => {
         let data;
@@ -68,13 +71,16 @@ wss.on("connection", (ws) => {
 
         // Player joining
         if (data.type === "join") {
+            const roomId = data.roomId;
             const desired = data.desiredPlayer;
+            const room = getOrCreateRoom(roomId);
 
+            let assignedPlayer = null;
             if (desired === 1 || desired === 2) {
                 // Client requested special player
-                if (!players[desired]) {
-                    players[desired] = ws;
-                    assignedPlayer = desired
+                if (!room.players[desired]) {
+                    room.players[desired] = ws;
+                    assignedPlayer = desired;
                 } else {
                     ws.send(JSON.stringify({
                         type: "full",
@@ -84,11 +90,11 @@ wss.on("connection", (ws) => {
                 }
             } else {
                 // Auto assing in case the url not content ?player=1 or ?player=2
-                if (!players[1]) {
-                    players[1] = ws;
+                if (!room.players[1]) {
+                    room.players[1] = ws;
                     assignedPlayer = 1;
-                } else if (!players[2]) {
-                    players[2] = ws;
+                } else if (!room.players[2]) {
+                    room.players[2] = ws;
                     assignedPlayer = 2;
                 } else {
                     ws.send(JSON.stringify({ type: "full", message: "Game is full" }));
@@ -96,19 +102,28 @@ wss.on("connection", (ws) => {
                 }
             }
 
+            ws.roomId = roomId;
+            ws.playerNumber = assignedPlayer;
+
             // Send player info to client
             ws.send(JSON.stringify({
                 type: "assign-player",
-                player: assignedPlayer
+                player: assignedPlayer,
+                roomId: roomId
             }));
 
             // Send game state to client
-            ws.send(JSON.stringify({ type: "state", state }));
+            ws.send(JSON.stringify({ type: "state", state: room.state }));
             return;
         }
 
         // Move from client
         if (data.type === "move") {
+            const roomId = ws.roomId;
+            const room = rooms[roomId];
+            if (!room) return; // Invalid room
+
+            const { puzzle, state, players } = room;
             const { row, col, value, player } = data;
 
             // Prevent wrong player making move (not player turn)
@@ -124,7 +139,7 @@ wss.on("connection", (ws) => {
             if (value === "") {
                 state.grid[row][col] = 0;
                 state.status = `Player ${player} cleared a cell.`;
-                broadcastState();
+                broadcastRoomState(roomId);
                 return;
             }
 
@@ -145,22 +160,35 @@ wss.on("connection", (ws) => {
                 state.status = `Player ${player} wrong! ${state.currentPlayer}'s turn.`;
             }
 
-            broadcastState();
+            broadcastRoomState(roomId);
             return;
         }
 
         // Reset game
         if (data.type === "reset") {
-            resetState();
-            broadcastState();
+            const roomId = ws.roomId;
+            const room = rooms[roomId];
+            if (!room) return; // Invalid room
+            createRoom(roomId);
+            broadcastRoomState(roomId);
             return;
         }
     });
 
     ws.on("close", () => {
-        if (players[1] == ws) players[1] = null;
-        if (players[2] == ws) players[2] = null;
         console.log("Client disconnected");
+        const roomId = ws.roomId;
+        const playerNumber = ws.playerNumber;
+        if (roomId && rooms[roomId]) {
+            const room = rooms[roomId];
+            if (room.players[playerNumber] === ws) {
+                room.players[playerNumber] = null;
+            }
+            if (!room.players[1] && !room.players[2]) {
+                delete rooms[roomId];
+                console.log(`Room ${roomId} deleted due to inactivity.`);
+            }
+        }
     });
 });
 
