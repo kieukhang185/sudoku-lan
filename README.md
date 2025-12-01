@@ -1,7 +1,7 @@
+<a href="https://buymeacoffee.com/kieukhang185" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
 # 🧩 Sudoku LAN – Single and Multiplayer (2-Players)
 A simple Sudoku game designed for **local LAN multiplayer**, where **two players connect from different devices** and play on the **same shared board in real time**.
-
-<a href="https://buymeacoffee.com/kieukhang185" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 ---
 Built with:
