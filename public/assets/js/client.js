@@ -9,6 +9,7 @@ import { getQueryParam } from './utils.js';
 let socket;
 let myPlayerNumber = null;
 let lastState = null;
+let boardInitialized = false;
 
 const boardEl = document.getElementById("board");
 const statusEl = document.getElementById("status");
@@ -17,11 +18,6 @@ const p2ScoreEl = document.getElementById("p2-score");
 const youAreEl = document.getElementById("you-are");
 const player1Info = document.getElementById("player1-info");
 const player2Info = document.getElementById("player2-info");
-
-let boardInitialized = false;
-
-// Read ?player=1 or ?room=2 from URL
-
 
 const desiredPlayer = (() => {
   const p = getQueryParam("player");
@@ -34,6 +30,7 @@ function generateRoomId() {
 }
 
 const roomId = getQueryParam("room") || generateRoomId();
+const difficulty = getQueryParam("difficulty") || "medium";
 
 // Connect to WebSocket server
 function connect() {
@@ -46,6 +43,7 @@ function connect() {
     socket.send(JSON.stringify({
       type: "join",
       roomId,
+      difficulty,
       desiredPlayer: desiredPlayer
     }));
   };

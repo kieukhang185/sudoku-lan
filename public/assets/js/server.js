@@ -11,9 +11,9 @@ app.use(express.static("public"));
 
 const rooms = {};
 
-function createRoom(roomId) {
+function createRoom(roomId, difficulty) {
 
-    const { grid, solution } = generateSudokuCommon("medium");
+    const { grid, solution } = generateSudokuCommon(difficulty);
     const puzzle = {
         grid,
         solution
@@ -34,9 +34,9 @@ function createRoom(roomId) {
     };
 }
 
-function getOrCreateRoom(roomId) {
+function getOrCreateRoom(roomId, difficulty) {
   if (!rooms[roomId]) {
-    createRoom(roomId);
+    createRoom(roomId, difficulty);
   }
   return rooms[roomId];
 }
@@ -73,7 +73,7 @@ wss.on("connection", (ws) => {
         if (data.type === "join") {
             const roomId = data.roomId;
             const desired = data.desiredPlayer;
-            const room = getOrCreateRoom(roomId);
+            const room = getOrCreateRoom(roomId, data.difficulty);
 
             let assignedPlayer = null;
             if (desired === 1 || desired === 2) {

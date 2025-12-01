@@ -40,10 +40,19 @@ document.querySelectorAll(".back-btn").forEach(btn => {
 // SOLO MODE LEVEL SELECTION
 document.querySelectorAll(".level-btn").forEach(btn => {
   btn.addEventListener("click", () => {
-    const level = btn.dataset.level;
-    window.location.href = `solo.html?level=${level}`;
+    const difficulty = btn.dataset.level;
+    window.location.href = `solo.html?difficulty=${difficulty}`;
   });
 });
+
+document.querySelectorAll(".multi-level-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const roomId = generateRoomId();
+    const difficulty = btn.dataset.level;
+    window.location.href = `shared.html?room=${roomId}&difficulty=${difficulty}&player=1`;
+  });
+});
+
 
 // JOIN ROOM BUTTON
 const joinRoomBtn = document.getElementById("btn-join-room");
@@ -59,10 +68,10 @@ if (joinRoomBtn) {
 }
 
 // CREATE ROOM BUTTON
-const createRoomBtn = document.getElementById("btn-create-room");
-if (createRoomBtn) {
-  createRoomBtn.addEventListener("click", () => {
-    const roomId = generateRoomId();
-    window.location.href = `shared.html?room=${roomId}&player=1`;
-  });
-}
+// const createRoomBtn = document.getElementById("btn-create-room");
+// if (createRoomBtn) {
+//   createRoomBtn.addEventListener("click", () => {
+//     const roomId = generateRoomId();
+//     window.location.href = `shared.html?room=${roomId}&player=1`;
+//   });
+// }
