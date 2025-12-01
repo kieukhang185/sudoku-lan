@@ -114,8 +114,6 @@ Now LAN devices can connect to your PC.
 ---
 
 ## 🚀 Future Ideas
-- Generator
-- Single player
 - Multi-room support
 - Player names
 - Spectator mode
