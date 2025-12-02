@@ -24,7 +24,6 @@ const difficulty = getQueryParam("difficulty");
 
 // Start / restart solo game
 function startSoloGame(difficulty) {
-  console.log("Starting solo game with difficulty:", difficulty);
   const { grid, solution } = generateSudokuCommon(difficulty);
   soloGrid = grid;
   soloSolution = solution;
@@ -105,6 +104,8 @@ function handleSoloInput(e) {
 
     soloNotes[row][col].clear();
     renderCellNotes(soloBoardEl, soloNotes, row, col);
+
+    // TODO: remove all notes with this number in the same row/col/box?
 
     if (isSoloSolved()) {
       soloStatusEl.textContent = `You solved the puzzle! 🎉 Score: ${soloScore}`;

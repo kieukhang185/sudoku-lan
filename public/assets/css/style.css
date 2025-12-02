@@ -247,6 +247,7 @@ body {
   grid-template-rows: repeat(3, 1fr);
   pointer-events: none; /* don't block clicks */
   z-index: 2;
+  place-items: center;
 }
 
 .cell-notes span {

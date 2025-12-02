@@ -118,7 +118,6 @@ export function highlightSameNumberCommon(containerEl, value, row, col) {
 
     // Highlight matching cells
     if (input.value === value) {
-      console.log(`Matching cell at row: ${r}, col: ${c}`);
       bg.style.background = cell.classList.contains("given")
         ? "#ffd86b"   // stronger for givens
         : "#ffeaa7";  // normal cells
@@ -127,6 +126,18 @@ export function highlightSameNumberCommon(containerEl, value, row, col) {
     } else {
       bg.style.background = ""; // no highlight
     }
+
+  });
+  const notes = containerEl.querySelectorAll(".cell-notes");
+  notes.forEach(note => {
+    const spans = note.querySelectorAll("span");
+    spans.forEach(span => {
+      if (span.textContent === value) {
+        span.style.fontWeight = "bold";
+      } else {
+        span.style.fontWeight = "";
+      }
+    });
   });
 }
 
