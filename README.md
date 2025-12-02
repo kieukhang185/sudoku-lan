@@ -6,6 +6,7 @@
 A simple Sudoku game designed for **local LAN multiplayer**, where **two players connect from different devices** and play on the **same shared board in real time**.
 
 ---
+
 Built with:
 - **Node.js** (Express server)
 - **WebSockets** (real-time sync)
@@ -86,7 +87,7 @@ Directly on PC
 # Home page
 http://localhost:3000
 
-http://<HOST-IP>:3000/shared.html?room=hia1p43&difficulty=easy&player=2
+http://<HOST-IP>:3000/shared.html?room=hia1p43&difficulty=easy&player=1
 http://<HOST-IP>:3000/shared.html?room=hia1p43&difficulty=easy&player=2
 ```
 

@@ -26,15 +26,20 @@
       Room: <span id="room-id"></span> — You are: <span id="you-are"></span>
     </div>
 
+    <div class="share-link-box">
+      <div class="share-container">
+        <input id="share-room-link" type="text" readonly />
+        <button id="btn-copy-link">Copy</button>
+        <button id="btn-reset">Reset Game</button>
+      </div>
+    </div>
+
+    <div id="status" class="status"></div>
+
     <div class="board-wrapper">
       <div id="board" class="board"></div>
     </div>
 
-    <div class="controls">
-      <button id="btn-reset">Reset Game</button>
-    </div>
-
-    <div id="status" class="status"></div>
   </div>
 
   <script type="module" src="assets/js/client.js"></script>

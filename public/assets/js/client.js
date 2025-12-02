@@ -18,6 +18,8 @@ const p2ScoreEl = document.getElementById("p2-score");
 const youAreEl = document.getElementById("you-are");
 const player1Info = document.getElementById("player1-info");
 const player2Info = document.getElementById("player2-info");
+const shareInput = document.getElementById("share-room-link");
+const copyBtn = document.getElementById("btn-copy-link");
 
 const desiredPlayer = (() => {
   const p = getQueryParam("player");
@@ -55,6 +57,12 @@ function connect() {
         myPlayerNumber = data.player;
         youAreEl.textContent = "Player " + myPlayerNumber;
         const roomSpan = document.getElementById("room-id");
+
+        const shareBox = document.querySelector(".share-link-box");
+        if (shareBox) {
+          shareBox.style.display = myPlayerNumber === 1 ? "block" : "none";
+        }
+
         if (roomSpan) roomSpan.textContent = data.roomId || roomId;
         return;
       }
@@ -150,6 +158,25 @@ document.getElementById("btn-reset").addEventListener("click", () => {
   }
   highlightSameNumberCommon(boardEl, "", -1, -1);
 });
+
+if (shareInput) {
+  const baseUrl = window.location.origin + window.location.pathname;
+  const shareUrl = `${baseUrl}?room=${encodeURIComponent(roomId)}&player=2`;
+  shareInput.value = shareUrl;
+}
+
+if (copyBtn) {
+  copyBtn.addEventListener("click", () => {
+    if (!shareInput) return;
+    shareInput.select();
+    shareInput.setSelectionRange(0, 99999); // mobile support
+    navigator.clipboard.writeText(shareInput.value)
+      .then(() => {
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+      });
+  });
+}
 
 // Start connection
 connect();
