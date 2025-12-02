@@ -37,7 +37,7 @@ function connect() {
   const loc = window.location;
   const proto = loc.protocol === "https:" ? "wss" : "ws";
   //const wsUrl = `${proto}://${loc.host}`;
-  const wsUrl = `wss://echo.websocket.org`;
+  const wsUrl = `https://wss.plab.asia`;
   socket = new WebSocket(wsUrl);
 
   socket.onopen = () => {
