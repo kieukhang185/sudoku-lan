@@ -1,5 +1,3 @@
-<a href="https://buymeacoffee.com/kieukhang185" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
-
 # 🧩 Sudoku LAN – Single and Multiplayer (2-Players)
 A simple Sudoku game designed for **local LAN multiplayer**, where **two players connect from different devices** and play on the **same shared board in real time**.
 
@@ -22,10 +20,10 @@ Sudoku LAN is a web-based Sudoku game that supports:
 
 Players connect using:
 ```text
-?player=1
-?player=2
+shared.html?room=hia1p43&difficulty=easy&player=1
+shared.html?room=hia1p43&difficulty=easy&player=2
 ```
-Example: `http://192.168.1.50:2000/?player=1`
+Example: `http://192.168.1.50:2000/shared.html?room=hia1p43&difficulty=easy&player=2`
 
 Refreshing the page keeps the same player number as long as `?player=1` is kept in the URL.
 
@@ -54,11 +52,11 @@ Server runs on **port 3000**.
 ## 🌐 Access Game
 🕹 Player 1:
 ```
-http://<HOST-IP>:3000/?player=1
+http://<HOST-IP>:3000/shared.html?room=hia1p43&difficulty=easy&player=2
 ```
 🕹 Player 2:
 ```
-http://<HOST-IP>:3000/?player=2
+http://<HOST-IP>:3000/shared.html?room=hia1p43&difficulty=easy&player=2
 ```
 
 Find your HOST IP:
@@ -84,8 +82,8 @@ Directly on PC
 # Home page
 http://localhost:3000
 
-http://<HOST-IP>:3000/?player=1
-http://<HOST-IP>:3000/?player=2
+http://<HOST-IP>:3000/shared.html?room=hia1p43&difficulty=easy&player=2
+http://<HOST-IP>:3000/shared.html?room=hia1p43&difficulty=easy&player=2
 ```
 
 ---
@@ -100,36 +98,6 @@ To allow phones/tablets to connect:
 - TCP 3000
 - Allow connection
 - Name: Sudoku-3000
-
-Now LAN devices can connect to your PC.
-
-- Nginx config to proxy to Node 3000 in case the the nextwork block on linux EC2:
-```bash
-sudo cat "
-server {
-    listen 80;
-    server_name _;
-
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-" > /etc/nginx/sites-available/sudoku-lan
-
-sudo ln -s /etc/nginx/sites-available/sudoku /etc/nginx/sites-enabled/sudoku-lan
-sudo rm /etc/nginx/sites-enabled/default
-sudo nginx -t
-sudo systemctl reload nginx
-```
-Now try in your browser: with port 80 opened
-```bash
-http://<EC2-PUBLIC-IP>
-```
 
 ---
 
