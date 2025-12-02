@@ -36,7 +36,8 @@ const difficulty = getQueryParam("difficulty") || "medium";
 function connect() {
   const loc = window.location;
   const proto = loc.protocol === "https:" ? "wss" : "ws";
-  const wsUrl = `${proto}://${loc.host}`;
+  //const wsUrl = `${proto}://${loc.host}`;
+  const wsUrl = `https://echo.websocket.org`;
   socket = new WebSocket(wsUrl);
 
   socket.onopen = () => {
