@@ -36,8 +36,7 @@ const difficulty = getQueryParam("difficulty") || "medium";
 function connect() {
   const loc = window.location;
   const proto = loc.protocol === "https:" ? "wss" : "ws";
-  //const wsUrl = `${proto}://${loc.host}`;
-  const wsUrl = `https://wss.plab.asia`;
+  const wsUrl = `${proto}://${loc.host}`;
   socket = new WebSocket(wsUrl);
 
   socket.onopen = () => {
@@ -50,14 +49,8 @@ function connect() {
   };
 
   socket.onmessage = (event) => {
-    let data = null;
     try {
-      data = JSON.parse(event.data);
-    } catch (e) {
-      console.log('Non-JSON message:', event.data);
-    }
-
-    if (data != null) {
+      const data = JSON.parse(event.data);
       if (data.type === "assign-player") {
         myPlayerNumber = data.player;
         youAreEl.textContent = "Player " + myPlayerNumber;
@@ -65,23 +58,25 @@ function connect() {
         if (roomSpan) roomSpan.textContent = data.roomId || roomId;
         return;
       }
-  
+
       if (data.type === "full") {
         alert(data.message);
         return;
       }
-  
+
       if (data.type === "state") {
         lastState = data.state;
         updateUI(data.state);
         return;
       }
-  
+
       if (data.type === "error") {
         alert(data.message);
       }
+    } catch (e) {
+      console.error("Cannot parse message: ", e);
     }
-  }
+  };
 
   socket.onclose = () => {
     console.log("Disconnected. Reconnecting...");
