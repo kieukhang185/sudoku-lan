@@ -53,10 +53,11 @@ function connect() {
     let data = null;
     try {
       data = JSON.parse(event.data);
-      console.log('JSON message:', data);
     } catch (e) {
       console.log('Non-JSON message:', event.data);
     }
+
+    if (data === null) return;
 
     if (data.type === "assign-player") {
       myPlayerNumber = data.player;
