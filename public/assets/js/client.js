@@ -50,8 +50,9 @@ function connect() {
   };
 
   socket.onmessage = (event) => {
+    let data = null;
     try {
-      const data = JSON.parse(event.data);
+      data = JSON.parse(event.data);
       console.log('JSON message:', data);
     } catch (e) {
       console.log('Non-JSON message:', event.data);
