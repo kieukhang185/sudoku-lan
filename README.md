@@ -1,3 +1,7 @@
+<p align="center">
+ <img src="public/assets/img/favicon.png" alt="Sudoku LAN" style="width:20%">
+</p>
+
 # 🧩 Sudoku LAN – Single and Multiplayer (2-Players)
 A simple Sudoku game designed for **local LAN multiplayer**, where **two players connect from different devices** and play on the **same shared board in real time**.
 
