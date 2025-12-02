@@ -57,31 +57,31 @@ function connect() {
       console.log('Non-JSON message:', event.data);
     }
 
-    if (data === null) return;
-
-    if (data.type === "assign-player") {
-      myPlayerNumber = data.player;
-      youAreEl.textContent = "Player " + myPlayerNumber;
-      const roomSpan = document.getElementById("room-id");
-      if (roomSpan) roomSpan.textContent = data.roomId || roomId;
-      return;
+    if (data != null) {
+      if (data.type === "assign-player") {
+        myPlayerNumber = data.player;
+        youAreEl.textContent = "Player " + myPlayerNumber;
+        const roomSpan = document.getElementById("room-id");
+        if (roomSpan) roomSpan.textContent = data.roomId || roomId;
+        return;
+      }
+  
+      if (data.type === "full") {
+        alert(data.message);
+        return;
+      }
+  
+      if (data.type === "state") {
+        lastState = data.state;
+        updateUI(data.state);
+        return;
+      }
+  
+      if (data.type === "error") {
+        alert(data.message);
+      }
     }
-
-    if (data.type === "full") {
-      alert(data.message);
-      return;
-    }
-
-    if (data.type === "state") {
-      lastState = data.state;
-      updateUI(data.state);
-      return;
-    }
-
-    if (data.type === "error") {
-      alert(data.message);
-    }
-  };
+  }
 
   socket.onclose = () => {
     console.log("Disconnected. Reconnecting...");
