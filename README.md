@@ -28,7 +28,7 @@ Players connect using:
 shared.html?room=hia1p43&difficulty=easy&player=1
 shared.html?room=hia1p43&difficulty=easy&player=2
 ```
-Example: `http://192.168.1.50:2000/shared.html?room=hia1p43&difficulty=easy&player=2`
+Example: `http://192.168.1.50:3000/shared.html?room=hia1p43&difficulty=easy&player=2`
 
 Refreshing the page keeps the same player number as long as `?player=1` is kept in the URL.
 
