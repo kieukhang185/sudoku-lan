@@ -16,8 +16,8 @@ const statusEl = document.getElementById("status");
 const p1ScoreEl = document.getElementById("p1-score");
 const p2ScoreEl = document.getElementById("p2-score");
 const youAreEl = document.getElementById("you-are");
-const player1Info = document.getElementById("player1-info");
-const player2Info = document.getElementById("player2-info");
+// const player1Info = document.getElementById("player1-info");
+// const player2Info = document.getElementById("player2-info");
 const shareInput = document.getElementById("share-room-link");
 const copyBtn = document.getElementById("btn-copy-link");
 
@@ -111,8 +111,8 @@ function updateUI(state) {
   p2ScoreEl.textContent = state.scores[2];
 
   // current player highlight
-  player1Info.classList.toggle("active", state.currentPlayer === 1);
-  player2Info.classList.toggle("active", state.currentPlayer === 2);
+  // player1Info.classList.toggle("active", state.currentPlayer === 1);
+  // player2Info.classList.toggle("active", state.currentPlayer === 2);
 
   statusEl.textContent = state.status;
 

@@ -7,13 +7,6 @@ A simple Sudoku game designed for **local LAN multiplayer**, where **two players
 
 ---
 
-Built with:
-- **Node.js** (Express server)
-- **WebSockets** (real-time sync)
-- **HTML, CSS, JavaScript** (client UI)
-
----
-
 ## 📖 Introduction
 Sudoku LAN is a web-based Sudoku game that supports:
 - Single player
@@ -57,7 +50,7 @@ Server runs on **port 3000**.
 ## 🌐 Access Game
 🕹 Player 1:
 ```
-http://<HOST-IP>:3000/shared.html?room=hia1p43&difficulty=easy&player=2
+http://<HOST-IP>:3000/shared.html?room=hia1p43&difficulty=easy&player=1
 ```
 🕹 Player 2:
 ```
@@ -104,21 +97,16 @@ To allow phones/tablets to connect:
 - Allow connection
 - Name: Sudoku-3000
 
----
+- From WSL (Windows subsystem for Linux)
+```bash
+$ hosname -I
 
-## 🎮 Gameplay Rules
-- Correct move: +1 point, same player continues
-- Wrong move: –1 point, turn switches
-- Reset button restarts puzzle
+# run as Windows powershell admin
+$ netsh interface portproxy add v4tov4 listenport=3000 listenaddress=0.0.0.0 connectport=3000 connectaddress=<WSL-HOSTNAME>
 
----
-
-## 🚀 Future Ideas
-- Multi-room support
-- Player names
-- Spectator mode
-- Game level
-- Persistent scores
+# delete port
+$ netsh interface portproxy delete v4tov4 listenport=3000 listenaddress=0.0.0.0
+```
 
 ---
 

@@ -25,7 +25,8 @@ function createRoom(roomId, difficulty) {
             grid: JSON.parse(JSON.stringify(puzzle.grid)),
             scores: { 1: 0, 2: 0}, // Score both 2 player
             currentPlayer: 1,
-            status: "Player 1's turn."
+            // status: "Player 1's turn."
+            status: "Both players can play at the same time."
         },
         players: {
             1: null,
@@ -127,10 +128,10 @@ wss.on("connection", (ws) => {
             const { row, col, value, player } = data;
 
             // Prevent wrong player making move (not player turn)
-            if (player === data.currentPlayer) {
-                ws.send(JSON.stringify({ type: "error", message: "Not your turn!" }));
-                return;
-            }
+            // if (player === data.currentPlayer) {
+            //     ws.send(JSON.stringify({ type: "error", message: "Not your turn!" }));
+            //     return;
+            // }
 
             // Not allowed to change give calls
             if (puzzle.grid[row][col] !== 0) return
@@ -152,12 +153,12 @@ wss.on("connection", (ws) => {
                 // Correct value
                 state.grid[row][col] = puzzle.solution[row][col];
                 state.scores[player] += 1;
-                state.status = `Player ${player} correct! Goes again.`;
+                // state.status = `Player ${player} correct! Goes again.`;
             } else {
                 // Wrong value
                 state.scores[player] -= 1;
                 state.currentPlayer = state.currentPlayer === 1 ? 2 : 1;
-                state.status = `Player ${player} wrong! ${state.currentPlayer}'s turn.`;
+                // state.status = `Player ${player} wrong! ${state.currentPlayer}'s turn.`;
             }
 
             broadcastRoomState(roomId);
